@@ -8,31 +8,49 @@ using System.Windows.Forms;
 
 namespace WindowsFormsApp1
 {
-    public interface IWordStatisticMaker
-    {
-        IEnumerable<TagStatistic> GetStatistic(IEnumerable<string> words);
-    }
-    public class CountingWordStatistic : IWordStatisticMaker
-    {
-        public IEnumerable<TagStatistic> GetStatistic(IEnumerable<string> words)
-        {
-            return words.GroupBy(x => x, x => x).Select(x => new TagStatistic(x.Key, x.ToList().Count));
-        }
-    }
 
     public class WinFormCloudVisualizer : Form , ICloudVisualizer
     {
-        public void DrawCloud(Cloud cloud)
+        private Bitmap drawArea;
+
+
+        public WinFormCloudVisualizer()
         {
             Width = 600;
             Height = 600;
+            var saveButton = new Button
+            {
+                Width = 100,
+                Height = 30,
+                Text = "Save",
+                Location = new Point(Width/2 - 50,Height - 100)
+            };
+            saveButton.Click += (sender, args) =>
+            {
+                using (var folder = new FolderBrowserDialog())
+                {
+                    DialogResult result = folder.ShowDialog();
+                    if (result == DialogResult.OK)
+                    {
+                        var folderName = folder.SelectedPath;
+                        drawArea.Save($"{folderName}\\cloud.png");
+                    }
+                }
+            };
+            Controls.Add(saveButton);
+        }
+
+        public void DrawCloud(Cloud cloud)
+        {
             var pb = new PictureBox
             {
 
-                Width = this.Width,
-                Height = this.Height,
+                Width = this.Width - 100,
+                Height = this.Height - 130,
+                BorderStyle = BorderStyle.Fixed3D,
+                Location = new Point(50,20)
             };
-            var drawArea = new Bitmap(pb.Size.Width, pb.Size.Height);
+            drawArea = new Bitmap(pb.Size.Width, pb.Size.Height);
             Controls.Add(pb);
 
 
