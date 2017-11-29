@@ -27,7 +27,7 @@ namespace WindowsFormsApp1
 
         public Cloud GetCloud()
         {
-            var words = TextReader.Read(Configuration.Path);
+            IEnumerable<string> words = TextReader.Read(Configuration.Path);
 
             foreach (var filter in TagFilters)
                 words = filter.Filter(words);
@@ -36,6 +36,7 @@ namespace WindowsFormsApp1
                 .OrderByDescending( x=> x.Coefficient)
                 .Take(Configuration.WordsInCloud)
                 .ToArray();
+
             var allWords = new List<Word>();
 
             var dFont = Configuration.MaxFontSize - Configuration.MinFontSize;
