@@ -5,20 +5,6 @@ using System.Linq;
 
 namespace WindowsFormsApp1
 {
-    public interface ITagStatMaiker
-    {
-        IEnumerable<TagStatistic> GetStatistic(IEnumerable<string> allTags);
-    }
-
-    public class TagStatMaiker : ITagStatMaiker
-    {
-        public IEnumerable<TagStatistic> GetStatistic(IEnumerable<string> allTags)
-        {
-            return allTags.GroupBy(x => x, x => x)
-                .Select(x => new TagStatistic(x.Key, x.Count()));
-        }
-    }
-
     public class CloudCombiner : ICloudCombiner
     {
         private IEnumerable<ITagFilter> TagFilters { get; }
@@ -50,15 +36,17 @@ namespace WindowsFormsApp1
                 .OrderByDescending( x=> x.Coefficient)
                 .Take(Configuration.WordsInCloud)
                 .ToArray();
-
             var allWords = new List<Word>();
+
             var dFont = Configuration.MaxFontSize - Configuration.MinFontSize;
             var minStat = statisic.Min(x => x.Coefficient);
             var maxStat = statisic.Max(x => x.Coefficient);
             var dCoef = maxStat - minStat;
             var d = dFont / dCoef;
+
             foreach (var tagStat in statisic)
             {
+                //однозначное отображение коэффициаета на интервал шрифтов
                 var fontSize = Configuration.MinFontSize + tagStat.Coefficient * d;
                 var width = fontSize * tagStat.Value.Length;
                 var height = fontSize;
