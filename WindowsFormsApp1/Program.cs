@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Autofac;
@@ -30,16 +31,17 @@ namespace WindowsFormsApp1
                     "../../ignore.txt"
                 }
             });
-            builder.Register(x => new Point(300, 250));
+            builder.RegisterType<DefaultViewCinfiguration>().As<IViewCinfiguration>();
+            builder.Register(x => new Point(200, 200));
             builder.RegisterType<TagsCloudVisualizer>();
             builder.RegisterType<CloudCombiner>().As<ICloudCombiner>();
             builder.RegisterType<TxtTextReader>().As<ITextReader>();
             builder.RegisterType<TagStatMaiker>().As<ITagStatMaiker>();
-            builder.RegisterType<AllWordsToLowerCase>().As<ITagFilter>();
-            builder.RegisterType<IgnoreSpecialWords>().As<ITagFilter>();
+            builder.RegisterAssemblyTypes(AppDomain.CurrentDomain.GetAssemblies())
+                .Where(t => typeof(ITagFilter).IsAssignableFrom(t))
+                .AsImplementedInterfaces();
             builder.RegisterType<ArchimedeanCircularCloudLayouter>().As<ICircularCloudLayouter>();
             builder.RegisterType<WinFormCloudVisualizer>().As<ICloudVisualizer>();
-
             Container = builder.Build();
         }
 
@@ -49,11 +51,7 @@ namespace WindowsFormsApp1
         [STAThread]
         static void Main()
         {
-            
             ContainerConfiguration();
-
-            
-
             using (var scope = Container.BeginLifetimeScope())
             {
                 scope.Resolve<TagsCloudVisualizer>().View();
