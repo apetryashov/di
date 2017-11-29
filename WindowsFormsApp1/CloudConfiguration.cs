@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-
-namespace WindowsFormsApp1
+﻿namespace WindowsFormsApp1
 {
     public class CloudConfiguration
     {

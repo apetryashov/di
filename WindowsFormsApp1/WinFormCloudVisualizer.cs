@@ -12,13 +12,12 @@ namespace WindowsFormsApp1
     public class WinFormCloudVisualizer : Form , ICloudVisualizer
     {
         private Bitmap drawArea;
-        private IViewCinfiguration ViewCinfiguration { get; }
 
-        public WinFormCloudVisualizer(IViewCinfiguration viewCinfiguration)
+
+        public WinFormCloudVisualizer()
         {
-            ViewCinfiguration = viewCinfiguration;
-            Width = ViewCinfiguration.Width;
-            Height = ViewCinfiguration.Height;
+            Width = 600;
+            Height = 600;
             var saveButton = new Button
             {
                 Width = 100,
@@ -57,11 +56,14 @@ namespace WindowsFormsApp1
 
             using (var g = Graphics.FromImage(drawArea))
             {
-                var brush = new SolidBrush(ViewCinfiguration.Color);
+                var sf = new StringFormat();
+                sf.Alignment = StringAlignment.Center;
+                sf.LineAlignment = StringAlignment.Center;
+                sf.FormatFlags = StringFormatFlags.NoClip;
                 foreach (var word in cloud.Words)
                 {
-                    var font = new Font(ViewCinfiguration.FontFamily, word.FontSize, FontStyle.Bold, GraphicsUnit.Point);
-                    g.DrawString(word.Value,font,brush, word.Area,ViewCinfiguration.StringFormat);
+                    var font = new Font("Arial", word.FontSize, FontStyle.Bold, GraphicsUnit.Point);
+                    g.DrawString(word.Value,font,Brushes.Red, word.Area,sf);
                 }
             }
             pb.Image = drawArea;
