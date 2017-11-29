@@ -8,11 +8,11 @@ namespace WindowsFormsApp1
     public class CloudCombiner : ICloudCombiner
     {
         private IEnumerable<ITagFilter> TagFilters { get; }
-        public ITagStatMaiker StatMaiker { get; }
+        private ITagStatMaiker StatMaiker { get; }
         private ITextReader TextReader { get; }
-        public CloudConfiguration Configuration { get; }
+        private ICloudConfiguration Configuration { get; }
         private ICircularCloudLayouter CloudLayouter { get; }
-        public CloudCombiner(CloudConfiguration configuration, 
+        public CloudCombiner(ICloudConfiguration configuration, 
             ICircularCloudLayouter cloudLayouter,
             ITextReader textReader, 
             IEnumerable<ITagFilter> tagFilters,

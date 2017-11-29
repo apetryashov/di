@@ -1,11 +1,10 @@
 ﻿namespace WindowsFormsApp1
 {
-    public class CloudConfiguration
+    public class CloudConfiguration : ICloudConfiguration
     {
-        public string Path;
-        public int MinFontSize;
-        public int MaxFontSize;
-        public int WordsInCloud;
-
+        public string Path { get; set; }
+        public int MinFontSize { get; set; }
+        public int MaxFontSize { get; set; }
+        public int WordsInCloud { get; set; }
     }
 }

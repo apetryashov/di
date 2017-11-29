@@ -23,14 +23,14 @@ namespace WindowsFormsApp1
                 MinFontSize = 10,
                 MaxFontSize = 30,
                 WordsInCloud = 50
-            });
-            builder.Register(x => new IgnoreWordsFiles
+            }).As<ICloudConfiguration>();
+            builder.Register(x => new IgnoreWordsConfiguration
             {
                 Paths = new[]
                 {
                     "../../ignore.txt"
                 }
-            });
+            }).As<IIgnoreWordsConfiguration>();
             builder.RegisterType<DefaultViewCinfiguration>().As<IViewCinfiguration>();
             builder.Register(x => new Point(200, 200));
             builder.RegisterType<TagsCloudVisualizer>();

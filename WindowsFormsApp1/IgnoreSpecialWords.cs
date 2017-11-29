@@ -6,9 +6,9 @@ namespace WindowsFormsApp1
     public class IgnoreSpecialWords : ITagFilter
     {
         private ITextReader Reader { get; }
-        private IgnoreWordsFiles IgnoreWords { get; }
+        private IIgnoreWordsConfiguration IgnoreWords { get; }
         private HashSet<string> SpecialStrings { get; set; }
-        public IgnoreSpecialWords( ITextReader reader, IgnoreWordsFiles ignoreWords)
+        public IgnoreSpecialWords( ITextReader reader, IIgnoreWordsConfiguration ignoreWords)
         {
             this.Reader = reader;
             this.IgnoreWords = ignoreWords;
@@ -33,11 +33,4 @@ namespace WindowsFormsApp1
             return tags.Where(tag => !SpecialStrings.Contains(tag));
         }
     }
-
-    public class IgnoreWordsFiles
-    {
-        public string[] Paths;
-
-    }
-
 }
