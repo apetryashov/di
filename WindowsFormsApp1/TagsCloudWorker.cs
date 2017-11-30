@@ -3,11 +3,11 @@ using System.Drawing;
 
 namespace WindowsFormsApp1
 {
-    public class TagsCloudVisualizer
+    public class TagsCloudWorker : ICloudWorker
     {
         private ICloudVisualizer Visualizer { get; }
         private ICloudCombiner CloudCombiner { get; }
-        public TagsCloudVisualizer(ICloudVisualizer visualizer, ICloudCombiner cloudCombiner)
+        public TagsCloudWorker(ICloudVisualizer visualizer, ICloudCombiner cloudCombiner)
         {
             Visualizer = visualizer;
             CloudCombiner = cloudCombiner;

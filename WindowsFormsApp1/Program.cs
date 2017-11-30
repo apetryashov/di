@@ -33,7 +33,7 @@ namespace WindowsFormsApp1
             }).As<IIgnoreWordsConfiguration>();
             builder.RegisterType<DefaultViewCinfiguration>().As<IViewCinfiguration>();
             builder.Register(x => new Point(200, 200));
-            builder.RegisterType<TagsCloudVisualizer>();
+            builder.RegisterType<TagsCloudWorker>().As<ICloudWorker>();
             builder.RegisterType<CloudCombiner>().As<ICloudCombiner>();
             builder.RegisterType<TxtTextReader>().As<ITextReader>();
             builder.RegisterType<TagStatMaiker>().As<ITagStatMaiker>();
@@ -54,7 +54,7 @@ namespace WindowsFormsApp1
             ContainerConfiguration();
             using (var scope = Container.BeginLifetimeScope())
             {
-                scope.Resolve<TagsCloudVisualizer>().View();
+                scope.Resolve<ICloudWorker>().View();
             }
         }
     }
