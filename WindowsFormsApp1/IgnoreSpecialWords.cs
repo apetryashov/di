@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace WindowsFormsApp1
 {
-    public class IgnoreSpecialWords : ITagFilter
+    public class IgnoreSpecialWords : ITagManipulator
     {
         private ITextReader Reader { get; }
         private IIgnoreWordsConfiguration IgnoreWords { get; }
@@ -26,7 +26,7 @@ namespace WindowsFormsApp1
                 }
             }
         }
-        public IEnumerable<string> Filter(IEnumerable<string> tags)
+        public IEnumerable<string> Manipulate(IEnumerable<string> tags)
         {
             if(SpecialStrings == null) ReadSpecialStrings();
 

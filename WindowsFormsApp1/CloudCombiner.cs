@@ -7,7 +7,7 @@ namespace WindowsFormsApp1
 {
     public class CloudCombiner : ICloudCombiner
     {
-        private IEnumerable<ITagFilter> TagFilters { get; }
+        private IEnumerable<ITagManipulator> TagFilters { get; }
         private ITagStatMaiker StatMaiker { get; }
         private ITextReader TextReader { get; }
         private ICloudConfiguration Configuration { get; }
@@ -15,7 +15,7 @@ namespace WindowsFormsApp1
         public CloudCombiner(ICloudConfiguration configuration, 
             ICircularCloudLayouter cloudLayouter,
             ITextReader textReader, 
-            IEnumerable<ITagFilter> tagFilters,
+            IEnumerable<ITagManipulator> tagFilters,
             ITagStatMaiker statMaiker)
         {
             Configuration = configuration;
@@ -30,7 +30,7 @@ namespace WindowsFormsApp1
             IEnumerable<string> words = TextReader.Read(Configuration.Path);
 
             foreach (var filter in TagFilters)
-                words = filter.Filter(words);
+                words = filter.Manipulate(words);
 
             var statisic = StatMaiker.GetStatistic(words)
                 .OrderByDescending( x=> x.Coefficient)

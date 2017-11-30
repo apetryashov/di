@@ -7,7 +7,7 @@ namespace WindowsFormsApp1
     {
         public IEnumerable<TagStatistic> GetStatistic(IEnumerable<string> allTags)
         {
-            return allTags.GroupBy(x => x, x => x)
+            return allTags.GroupBy(x => x)
                 .Select(x => new TagStatistic(x.Key, x.Count()));
         }
     }

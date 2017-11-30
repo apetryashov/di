@@ -38,7 +38,7 @@ namespace WindowsFormsApp1
             builder.RegisterType<TxtTextReader>().As<ITextReader>();
             builder.RegisterType<TagStatMaiker>().As<ITagStatMaiker>();
             builder.RegisterAssemblyTypes(AppDomain.CurrentDomain.GetAssemblies())
-                .Where(t => typeof(ITagFilter).IsAssignableFrom(t))
+                .Where(t => typeof(ITagManipulator).IsAssignableFrom(t))
                 .AsImplementedInterfaces();
             builder.RegisterType<ArchimedeanCircularCloudLayouter>().As<ICircularCloudLayouter>();
             builder.RegisterType<WinFormCloudVisualizer>().As<ICloudVisualizer>();
