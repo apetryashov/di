@@ -1,4 +1,4 @@
-﻿namespace WindowsFormsApp1
+﻿namespace Di
 {
     public interface IIgnoreWordsConfiguration
     {

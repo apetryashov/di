@@ -6,7 +6,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
 
-namespace WindowsFormsApp1
+namespace Di
 {
 
     public class WinFormCloudVisualizer : Form , ICloudVisualizer

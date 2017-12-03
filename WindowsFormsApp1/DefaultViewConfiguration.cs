@@ -1,8 +1,8 @@
 ﻿using System.Drawing;
 
-namespace WindowsFormsApp1
+namespace Di
 {
-    public class DefaultViewCinfiguration : IViewCinfiguration
+    public class DefaultViewConfiguration : IViewConfiguration
     {
         public Color Color { get; set; } = Color.Red;
         public FontFamily FontFamily { get; set; } = FontFamily.GenericSerif;

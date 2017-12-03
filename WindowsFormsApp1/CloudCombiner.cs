@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-namespace WindowsFormsApp1
+namespace Di
 {
     public class CloudCombiner : ICloudCombiner
     {
         private IEnumerable<ITagManipulator> TagFilters { get; }
-        private ITagStatMaiker StatMaiker { get; }
+        private ITagStatisticsGenerator StatisticsGenerator { get; }
         private ITextReader TextReader { get; }
         private ICloudConfiguration Configuration { get; }
         private ICircularCloudLayouter CloudLayouter { get; }
@@ -16,13 +16,13 @@ namespace WindowsFormsApp1
             ICircularCloudLayouter cloudLayouter,
             ITextReader textReader, 
             IEnumerable<ITagManipulator> tagFilters,
-            ITagStatMaiker statMaiker)
+            ITagStatisticsGenerator statisticsGenerator)
         {
             Configuration = configuration;
             CloudLayouter = cloudLayouter;
             TextReader = textReader;
             TagFilters = tagFilters;
-            StatMaiker = statMaiker;
+            StatisticsGenerator = statisticsGenerator;
         }
 
         public Cloud GetCloud()
@@ -32,9 +32,9 @@ namespace WindowsFormsApp1
             foreach (var filter in TagFilters)
                 words = filter.Manipulate(words);
 
-            var statisic = StatMaiker.GetStatistic(words)
+            var statisic = StatisticsGenerator.GetStatistics(words)
                 .OrderByDescending( x=> x.Coefficient)
-                .Take(Configuration.WordsInCloud)
+                .Take(Configuration.NumberOfWordsInTheCloud)
                 .ToArray();
 
             var allWords = new List<Word>();

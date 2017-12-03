@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-namespace WindowsFormsApp1
+namespace Di
 {
     public class TxtTextReader : ITextReader
     {

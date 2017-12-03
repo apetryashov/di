@@ -1,8 +1,8 @@
 ﻿using System.Drawing;
 
-namespace WindowsFormsApp1
+namespace Di
 {
-    public interface IViewCinfiguration
+    public interface IViewConfiguration
     {
         Color Color { get; set; }
         FontFamily FontFamily { get; set; }

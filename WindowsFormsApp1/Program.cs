@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using Autofac;
 using Autofac.Core;
 
-namespace WindowsFormsApp1
+namespace Di
 {
     static class Program
     {
@@ -22,7 +22,7 @@ namespace WindowsFormsApp1
                 Path = "../../WarAndPeaceWords.txt",
                 MinFontSize = 10,
                 MaxFontSize = 30,
-                WordsInCloud = 50
+                NumberOfWordsInTheCloud = 50
             }).As<ICloudConfiguration>();
             builder.Register(x => new IgnoreWordsConfiguration
             {
@@ -31,12 +31,12 @@ namespace WindowsFormsApp1
                     "../../ignore.txt"
                 }
             }).As<IIgnoreWordsConfiguration>();
-            builder.RegisterType<DefaultViewCinfiguration>().As<IViewCinfiguration>();
+            builder.RegisterType<DefaultViewConfiguration>().As<IViewConfiguration>();
             builder.Register(x => new Point(200, 200));
             builder.RegisterType<TagsCloudWorker>().As<ICloudWorker>();
             builder.RegisterType<CloudCombiner>().As<ICloudCombiner>();
             builder.RegisterType<TxtTextReader>().As<ITextReader>();
-            builder.RegisterType<TagStatMaiker>().As<ITagStatMaiker>();
+            builder.RegisterType<TagStatisticsGenerator>().As<ITagStatisticsGenerator>();
             builder.RegisterAssemblyTypes(AppDomain.CurrentDomain.GetAssemblies())
                 .Where(t => typeof(ITagManipulator).IsAssignableFrom(t))
                 .AsImplementedInterfaces();

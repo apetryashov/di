@@ -1,10 +1,10 @@
-﻿namespace WindowsFormsApp1
+﻿namespace Di
 {
     public interface ICloudConfiguration
     {
         string Path { get; set; }
         int MinFontSize { get; set; }
         int MaxFontSize { get; set; }
-        int WordsInCloud { get; set; }
+        int NumberOfWordsInTheCloud { get; set; }
     }
 }

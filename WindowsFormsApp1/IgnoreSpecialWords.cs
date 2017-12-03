@@ -1,24 +1,24 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace WindowsFormsApp1
+namespace Di
 {
     public class IgnoreSpecialWords : ITagManipulator
     {
         private ITextReader Reader { get; }
-        private IIgnoreWordsConfiguration IgnoreWords { get; }
+        private IIgnoreWordsConfiguration IgnoreWordsConfiguration { get; }
         private HashSet<string> SpecialStrings { get; set; }
-        public IgnoreSpecialWords( ITextReader reader, IIgnoreWordsConfiguration ignoreWords)
+        public IgnoreSpecialWords( ITextReader reader, IIgnoreWordsConfiguration ignoreWordsConfiguration)
         {
             this.Reader = reader;
-            this.IgnoreWords = ignoreWords;
+            this.IgnoreWordsConfiguration = ignoreWordsConfiguration;
         }
 
         private void ReadSpecialStrings()
         {
             SpecialStrings = new HashSet<string>();
 
-            foreach (var path in IgnoreWords.Paths)
+            foreach (var path in IgnoreWordsConfiguration.Paths)
             {
                 foreach (var ignoreWord in Reader.Read(path))
                 {

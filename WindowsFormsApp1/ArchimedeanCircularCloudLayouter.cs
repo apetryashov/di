@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-namespace WindowsFormsApp1
+namespace Di
 {
     public class ArchimedeanCircularCloudLayouter : ICircularCloudLayouter
     {

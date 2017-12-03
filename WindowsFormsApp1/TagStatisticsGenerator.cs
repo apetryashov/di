@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace WindowsFormsApp1
+namespace Di
 {
-    public class TagStatMaiker : ITagStatMaiker
+    public class TagStatisticsGenerator : ITagStatisticsGenerator
     {
-        public IEnumerable<TagStatistic> GetStatistic(IEnumerable<string> allTags)
+        public IEnumerable<TagStatistic> GetStatistics(IEnumerable<string> allTags)
         {
             return allTags.GroupBy(x => x)
                 .Select(x => new TagStatistic(x.Key, x.Count()));
