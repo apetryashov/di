@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{92D75CBE-7455-46D8-B2E5-495044DA156B}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Di</RootNamespace>
-    <AssemblyName>Di</AssemblyName>
+    <RootNamespace>TagsCloudVisualization</RootNamespace>
+    <AssemblyName>TagsCloudVisualization</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

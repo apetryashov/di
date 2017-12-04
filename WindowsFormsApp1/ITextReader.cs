@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Di
+namespace TagsCloudVisualization
 {
     public interface ITextReader
     {

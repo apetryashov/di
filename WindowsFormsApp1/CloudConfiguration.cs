@@ -1,4 +1,4 @@
-﻿namespace Di
+﻿namespace TagsCloudVisualization
 {
     public class CloudConfiguration : ICloudConfiguration
     {

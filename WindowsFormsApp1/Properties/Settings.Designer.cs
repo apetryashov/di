@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Di.Properties {
+namespace TagsCloudVisualization.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

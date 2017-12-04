@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using Autofac;
 using Autofac.Core;
 
-namespace Di
+namespace TagsCloudVisualization
 {
     static class Program
     {

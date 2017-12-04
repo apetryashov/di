@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-namespace Di
+namespace TagsCloudVisualization
 {
     public class ArchimedeanCircularCloudLayouter : ICircularCloudLayouter
     {
