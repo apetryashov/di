@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using FakeItEasy;
 using FluentAssertions;
+using Moq;
 using NUnit.Framework;
 
 namespace TagsCloudVisualization.Tests
@@ -10,24 +10,24 @@ namespace TagsCloudVisualization.Tests
     [TestFixture]
     public class TagManipulators_Should
     {
-        private ITextReader textReader;
+        private Mock<ITextReader> textReader;
+        private Mock<IIgnoreWordsConfiguration> config;
         private IEnumerable<ITagManipulator> manipulators;
         [SetUp]
         public void SetUp()
         {
-            textReader = A.Fake<ITextReader>();
-            var config = A.Fake<IIgnoreWordsConfiguration>();
-            A.CallTo(() => config.Paths)
-                .Returns(new[] {String.Empty});
-            manipulators = new List<ITagManipulator>
-            {
-                new AllWordsToLowerCase(),
-                new IgnoreSpecialWords(textReader, config)
-            };
+            textReader = new Mock<ITextReader>();
+            this.config = new Mock<IIgnoreWordsConfiguration>();
+            this.config.Setup(x => x.Paths).Returns(new[] {String.Empty});
         }
 
         public IEnumerable<string> Manipulate(IEnumerable<string> tags)
         {
+            manipulators = new List<ITagManipulator>
+            {
+                new AllWordsToLowerCase(),
+                new IgnoreSpecialWords(textReader.Object, config.Object)
+            };
             foreach (var manipulator in manipulators)
                 tags = manipulator.Manipulate(tags);
             return tags;
@@ -44,8 +44,8 @@ namespace TagsCloudVisualization.Tests
         public void Manipulate_IgnoreSpecialWordsCorrectWork()
         {
             var input = new[] { "a", "b", "c", "d", "e", "f", "g", "h" };
-            A.CallTo(() => textReader.Read(A<string>.Ignored))
-                .Returns(new[] { "a", "b", "c", "d" });
+            textReader.Setup(x => x.Read(It.IsAny<string>()))
+                .Returns(new[] {"a", "b", "c", "d"});
             Manipulate(input).Should()
                 .BeEquivalentTo("e", "f", "g", "h");
         }
@@ -54,7 +54,7 @@ namespace TagsCloudVisualization.Tests
         public void Manipulate_ComplexInteraction()
         {
             var input = new[] { "A", "b", "c", "D", "e", "F", "G", "H" };
-            A.CallTo(() => textReader.Read(A<string>.Ignored))
+            textReader.Setup(x => x.Read(It.IsAny<string>()))
                 .Returns(new[] { "a", "b", "c", "d" });
             Manipulate(input).Should()
                 .BeEquivalentTo("e", "f", "g", "h");

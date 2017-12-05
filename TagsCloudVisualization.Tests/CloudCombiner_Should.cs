@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Autofac;
-using FakeItEasy;
 using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using NUnit.Framework;
 
 namespace TagsCloudVisualization.Tests
@@ -15,20 +14,21 @@ namespace TagsCloudVisualization.Tests
     {
         private ContainerBuilder builder;
         private Point center;
-        private ICloudConfiguration cloudConfiguration;
+        private Mock<ICloudConfiguration> cloudConfiguration;
+        private Mock<ITextReader> textReader;
+        private Mock<ITagStatisticsGenerator> statisticGenerator;
         [SetUp]
         public void SetUp()
         {
             builder = new ContainerBuilder();
 
-            cloudConfiguration = A.Fake<ICloudConfiguration>();
-            A.CallTo(() => cloudConfiguration.MinFontSize)
-                .Returns(10);
-            A.CallTo(() => cloudConfiguration.MaxFontSize)
-                .Returns(30);
-            builder.RegisterInstance(cloudConfiguration).As<ICloudConfiguration>();
-            var textReader = A.Fake<ITextReader>();
-            builder.RegisterInstance(textReader).As<ITextReader>();
+            cloudConfiguration = new Mock<ICloudConfiguration>();
+            cloudConfiguration.Setup(x => x.MinFontSize).Returns(10);
+            cloudConfiguration.Setup(x => x.MaxFontSize).Returns(30);
+
+            textReader = new Mock<ITextReader>();
+            statisticGenerator = new Mock<ITagStatisticsGenerator>();
+
             builder.RegisterType<CloudCombiner>().As<ICloudCombiner>();
             builder.RegisterType<ArchimedeanCircularCloudLayouter>().As<ICircularCloudLayouter>();
             builder.Register(x => new Point());
@@ -38,6 +38,12 @@ namespace TagsCloudVisualization.Tests
 
         public ICloudCombiner GetCombiner()
         {
+            builder.RegisterInstance(cloudConfiguration.Object)
+                .As<ICloudConfiguration>();
+            builder.RegisterInstance(textReader.Object)
+                .As<ITextReader>();
+            builder.RegisterInstance(statisticGenerator.Object)
+                .As<ITagStatisticsGenerator>();
             var container = builder.Build();
             center = container.Resolve<Point>();
             return container.Resolve<ICloudCombiner>();
@@ -48,15 +54,14 @@ namespace TagsCloudVisualization.Tests
         [TestCase(100)]
         public void GetCloud_AllWordsFormACircle(int wordsCount)
         {
-            A.CallTo(() => cloudConfiguration.NumberOfWordsInTheCloud)
+            cloudConfiguration.Setup(x => x.NumberOfWordsInTheCloud)
                 .Returns(wordsCount);
             var statistic = new List<TagStatistic>();
             for (var i = 0; i < wordsCount; i++)
                 statistic.Add(new TagStatistic(i.ToString(),i));
-            var statisticGenerator = A.Fake<ITagStatisticsGenerator>();
-            A.CallTo(() => statisticGenerator.GetStatistics(A<IEnumerable<string>>.Ignored))
+
+            statisticGenerator.Setup(x => x.GetStatistics(It.IsAny<IEnumerable<string>>()))
                 .Returns(statistic);
-            builder.RegisterInstance(statisticGenerator).As<ITagStatisticsGenerator>();
 
             var cloud = GetCombiner().GetCloud();
             AllWordsFormACircle(cloud);
@@ -69,19 +74,20 @@ namespace TagsCloudVisualization.Tests
         [TestCase(100,10,15)]
         public void GetCloud_SingleValuedDisplayOfWordSizes(int wordsCount, int min, int max)
         {
-            A.CallTo(() => cloudConfiguration.MinFontSize)
+
+            cloudConfiguration.Setup(x => x.MinFontSize)
                 .Returns(min);
-            A.CallTo(() => cloudConfiguration.MaxFontSize)
+            cloudConfiguration.Setup(x => x.MaxFontSize)
                 .Returns(max);
-            A.CallTo(() => cloudConfiguration.NumberOfWordsInTheCloud)
+            cloudConfiguration.Setup(x => x.NumberOfWordsInTheCloud)
                 .Returns(wordsCount);
+
             var statistic = new List<TagStatistic>();
             for (var i = 0; i < wordsCount; i++)
                 statistic.Add(new TagStatistic(i.ToString(), i));
-            var statisticGenerator = A.Fake<ITagStatisticsGenerator>();
-            A.CallTo(() => statisticGenerator.GetStatistics(A<IEnumerable<string>>.Ignored))
+
+            statisticGenerator.Setup(x => x.GetStatistics(It.IsAny<IEnumerable<string>>()))
                 .Returns(statistic);
-            builder.RegisterInstance(statisticGenerator).As<ITagStatisticsGenerator>();
 
             var cloud = GetCombiner().GetCloud();
 
