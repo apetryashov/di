@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 using Autofac;
 using Autofac.Core;
+using Newtonsoft.Json;
 
 namespace TagsCloudVisualization
 {
@@ -17,22 +20,9 @@ namespace TagsCloudVisualization
         private static void ContainerConfiguration()
         {
             var builder = new ContainerBuilder();
-            builder.Register(x => new CloudConfiguration
-            {
-                Path = "../../WarAndPeaceWords.txt",
-                MinFontSize = 10,
-                MaxFontSize = 30,
-                NumberOfWordsInTheCloud = 50
-            }).As<ICloudConfiguration>();
-            builder.Register(x => new IgnoreWordsConfiguration
-            {
-                Paths = new[]
-                {
-                    "../../ignore.txt"
-                }
-            }).As<IIgnoreWordsConfiguration>();
-            builder.RegisterType<DefaultViewConfiguration>().As<IViewConfiguration>();
+            builder.RegisterType<XmlConfigReader>().As<IConfigReader>();
             builder.Register(x => new Point(200, 200));
+            builder.Register(x => "config.xml");
             builder.RegisterType<TagsCloudWorker>().As<ICloudWorker>();
             builder.RegisterType<CloudCombiner>().As<ICloudCombiner>();
             builder.RegisterType<TxtTextReader>().As<ITextReader>();
@@ -51,6 +41,35 @@ namespace TagsCloudVisualization
         [STAThread]
         static void Main()
         {
+            //var config = new Config
+            //{
+            //    CloudConfiguration = new CloudConfiguration
+            //    {
+            //        MinFontSize = 10,
+            //        MaxFontSize = 20,
+            //        NumberOfWordsInTheCloud = 50,
+            //        Path = "../../WarAndPeaceWords.txt"
+            //    },
+            //    IgnoreWordsConfiguration = new IgnoreWordsConfiguration
+            //    {
+            //        Paths = new[]
+            //        {
+            //            "../../ignore.txt",
+            //        }
+            //    },
+            //    ViewConfiguration = new SerizlizeViewConfiguration()
+            //    {
+            //        Color = "Red",
+            //        FontFamily = "Times New Roman",
+            //        Height = 500,
+            //        Width = 500
+            //    }
+            //};
+            //var serializer = new XmlSerializer(typeof(Config));
+            //var stream = new StreamWriter("config.xml");
+
+            //serializer.Serialize(stream, config);
+
             ContainerConfiguration();
             using (var scope = Container.BeginLifetimeScope())
             {
@@ -58,4 +77,18 @@ namespace TagsCloudVisualization
             }
         }
     }
+
+    //public interface IConfig
+    //{
+    //    CloudConfiguration CloudConfiguration { get; set; }
+    //    SerizlizeViewConfiguration ViewConfiguration { get; set; }
+    //    IgnoreWordsConfiguration IgnoreWordsConfiguration { get; set; }
+    //}
+
+    //public class Config : IConfig
+    //{
+    //    public CloudConfiguration CloudConfiguration { get; set; }
+    //    public SerizlizeViewConfiguration ViewConfiguration { get; set; }
+    //    public IgnoreWordsConfiguration IgnoreWordsConfiguration { get; set; }
+    //}
 }

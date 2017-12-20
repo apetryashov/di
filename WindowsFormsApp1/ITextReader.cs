@@ -4,6 +4,6 @@ namespace TagsCloudVisualization
 {
     public interface ITextReader
     {
-        string[] Read(string path);
+        Result<string[]> Read(string path);
     }
 }

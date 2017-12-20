@@ -35,6 +35,9 @@
     <Reference Include="Autofac, Version=4.6.2.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.4.6.2\lib\net45\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1-beta1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression.FileSystem" />
@@ -56,6 +59,8 @@
     <Compile Include="Cloud.cs" />
     <Compile Include="CloudCombiner.cs" />
     <Compile Include="CloudConfiguration.cs" />
+    <Compile Include="Config.cs" />
+    <Compile Include="XmlConfigReader.cs" />
     <Compile Include="ICloudCombiner.cs" />
     <Compile Include="ICloudConfiguration.cs" />
     <Compile Include="ICloudVisualizer.cs" />
@@ -68,10 +73,11 @@
     <Compile Include="ITagStatisticsGenerator.cs" />
     <Compile Include="ITextReader.cs" />
     <Compile Include="IViewConfiguration.cs" />
+    <Compile Include="Result.cs" />
     <Compile Include="TagsCloudWorker.cs" />
     <Compile Include="TagStatisticsGenerator.cs" />
     <Compile Include="TxtTextReader.cs" />
-    <Compile Include="DefaultViewConfiguration.cs" />
+    <Compile Include="ViewConfiguration.cs" />
     <Compile Include="WinFormCloudVisualizer.cs">
       <SubType>Form</SubType>
     </Compile>

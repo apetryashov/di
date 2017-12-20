@@ -5,9 +5,9 @@ namespace TagsCloudVisualization
 {
     public class AllWordsToLowerCase : ITagManipulator
     {
-        public IEnumerable<string> Manipulate(IEnumerable<string> tags)
+        public Result<IEnumerable<string>> Manipulate(IEnumerable<string> tags)
         {
-            return tags.Select(x => x.ToLower());
+            return Result.Of(() => tags.Select(x => x.ToLower()));
         }
     }
 }

@@ -2,6 +2,6 @@
 {
     public interface ICloudCombiner
     {
-        Cloud GetCloud();
+        Result<Cloud> GetCloud();
     }
 }

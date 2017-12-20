@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -10,51 +10,69 @@ namespace TagsCloudVisualization
         private IEnumerable<ITagManipulator> TagFilters { get; }
         private ITagStatisticsGenerator StatisticsGenerator { get; }
         private ITextReader TextReader { get; }
-        private ICloudConfiguration Configuration { get; }
+        private IConfigReader ConfigReader { get; }
         private ICircularCloudLayouter CloudLayouter { get; }
-        public CloudCombiner(ICloudConfiguration configuration, 
+        public CloudCombiner(IConfigReader configReader, 
             ICircularCloudLayouter cloudLayouter,
             ITextReader textReader, 
             IEnumerable<ITagManipulator> tagFilters,
             ITagStatisticsGenerator statisticsGenerator)
         {
-            Configuration = configuration;
+            ConfigReader = configReader;
             CloudLayouter = cloudLayouter;
             TextReader = textReader;
             TagFilters = tagFilters;
             StatisticsGenerator = statisticsGenerator;
         }
 
-        public Cloud GetCloud()
+        public Result<IEnumerable<string>> FilterWords(IEnumerable<string> words)
         {
-            IEnumerable<string> words = TextReader.Read(Configuration.Path);
-
             foreach (var filter in TagFilters)
-                words = filter.Manipulate(words);
+            {
+                var result = filter.Manipulate(words)
+                    .Then(x => words = x);
+                if (!result.IsSuccess) return Result.Fail<IEnumerable<string>>(result.Error);
+            }
+            return Result.Ok(words);
+        }
 
-            var statisic = StatisticsGenerator.GetStatistics(words)
-                .OrderByDescending( x=> x.Coefficient)
-                .Take(Configuration.NumberOfWordsInTheCloud)
-                .ToArray();
-
-            var allWords = new List<Word>();
-
-            var dFont = Configuration.MaxFontSize - Configuration.MinFontSize;
+        public Rectangle GetWordArea(TagStatistic tagStat, double fontSize)
+        {
+            //однозначное отображение коэффициаета на интервал шрифтов
+            var width = fontSize * tagStat.Value.Length;
+            var height = fontSize;
+            var size = new Size((int)(width), (int)height);
+            return CloudLayouter.PutNextRectangle(size);
+        }
+        private Cloud GetCloud(TagStatistic[] statisic, ICloudConfiguration config)
+        {
+            var dFont = config.MaxFontSize - config.MinFontSize;
             var minStat = statisic.Min(x => x.Coefficient);
             var maxStat = statisic.Max(x => x.Coefficient);
             var dCoef = maxStat - minStat;
             var d = dFont / dCoef;
-
-            foreach (var tagStat in statisic)
+            var allWords = statisic.Select(tagStat =>
             {
-                //однозначное отображение коэффициаета на интервал шрифтов
-                var fontSize = Configuration.MinFontSize + tagStat.Coefficient * d;
-                var width = fontSize * tagStat.Value.Length;
-                var height = fontSize;
-                var rect = CloudLayouter.PutNextRectangle(new Size((int)(width), (int)(height)));
-                allWords.Add(new Word(tagStat.Value, (int)fontSize, rect));
-            }
+                var fontSize = config.MinFontSize + tagStat.Coefficient * d;
+                return new Word(tagStat.Value, (int)fontSize, GetWordArea(tagStat,fontSize));
+            });
             return new Cloud(allWords);
+        }
+
+        public Result<Cloud> GetCloud()
+        {
+            var configResult = ConfigReader.GetCloudConfiguration();
+            if (!configResult.IsSuccess)
+                return Result.Fail<Cloud>(configResult.Error);
+            var config = configResult.Value;
+            return TextReader.Read(config.Path)
+                .Then(FilterWords)
+                .Then(words => StatisticsGenerator.GetStatistics(words)
+                    .OrderByDescending(x => x.Coefficient)
+                    .Take(config.NumberOfWordsInTheCloud)
+                    .ToArray())
+                .Then(s => GetCloud(s,config));
+
         }
     }
 }

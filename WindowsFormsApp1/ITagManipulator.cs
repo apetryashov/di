@@ -4,6 +4,6 @@ namespace TagsCloudVisualization
 {
     public interface ITagManipulator
     {
-        IEnumerable<string> Manipulate(IEnumerable<string> tags);
+        Result<IEnumerable<string>> Manipulate(IEnumerable<string> tags);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace TagsCloudVisualization
@@ -6,31 +7,39 @@ namespace TagsCloudVisualization
     public class IgnoreSpecialWords : ITagManipulator
     {
         private ITextReader Reader { get; }
-        private IIgnoreWordsConfiguration IgnoreWordsConfiguration { get; }
+        private IConfigReader ConfigReader { get; }
         private HashSet<string> SpecialStrings { get; set; }
-        public IgnoreSpecialWords( ITextReader reader, IIgnoreWordsConfiguration ignoreWordsConfiguration)
+        public IgnoreSpecialWords( ITextReader reader, IConfigReader configReader)
         {
             this.Reader = reader;
-            this.IgnoreWordsConfiguration = ignoreWordsConfiguration;
+            this.ConfigReader = configReader;
         }
 
-        private void ReadSpecialStrings()
+        private Result<None> ReadSpecialStrings()
         {
             SpecialStrings = new HashSet<string>();
-
-            foreach (var path in IgnoreWordsConfiguration.Paths)
-            {
-                foreach (var ignoreWord in Reader.Read(path))
+            return ConfigReader.GetIgnoreWordsConfiguration()
+                .Then(conf =>
                 {
-                    SpecialStrings.Add(ignoreWord);
-                }
-            }
+                    foreach (var path in conf.Paths)
+                    {
+                        var result = Reader.Read(path)
+                            .Then(words => words.ToList()
+                                .ForEach(x => SpecialStrings.Add(x)));
+                        if (!result.IsSuccess) return result;
+                    }
+                    return Result.Ok();
+                });
         }
-        public IEnumerable<string> Manipulate(IEnumerable<string> tags)
+        public Result<IEnumerable<string>> Manipulate(IEnumerable<string> tags)
         {
-            if(SpecialStrings == null) ReadSpecialStrings();
-
-            return tags.Where(tag => !SpecialStrings.Contains(tag));
+            if (SpecialStrings == null)
+            {
+                var result = ReadSpecialStrings();
+                if (!result.IsSuccess)
+                    return Result.Fail<IEnumerable<string>>(result.Error);
+            }
+            return Result.Ok(tags.Where(tag => !SpecialStrings.Contains(tag)));
         }
     }
 }

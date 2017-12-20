@@ -6,9 +6,9 @@ namespace TagsCloudVisualization
 {
     public class TxtTextReader : ITextReader
     {
-        public string[] Read(string path)
+        public Result<string[]> Read(string path)
         {
-            return File.ReadAllLines(path);
+            return Result.Of(() => File.ReadAllLines(path));
         }
     }
 }

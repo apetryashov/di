@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 
 namespace TagsCloudVisualization
@@ -15,8 +16,9 @@ namespace TagsCloudVisualization
 
         public void View()
         {
-            var cloud = CloudCombiner.GetCloud();
-            Visualizer.DrawCloud(cloud);
+            CloudCombiner.GetCloud()
+                .Then(Visualizer.DrawCloud)
+                .OnFail(Visualizer.ShowError);
         }
     }
 }

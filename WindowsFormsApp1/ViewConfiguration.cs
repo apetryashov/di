@@ -2,12 +2,12 @@
 
 namespace TagsCloudVisualization
 {
-    public class DefaultViewConfiguration : IViewConfiguration
+    public class ViewConfiguration : IViewConfiguration
     {
-        public Color Color { get; set; } = Color.Red;
-        public FontFamily FontFamily { get; set; } = FontFamily.GenericSerif;
-        public int Width { get; set; } = 500;
-        public int Height { get; set; } = 500;
+        public Color Color { get; set; } 
+        public FontFamily FontFamily { get; set; } 
+        public int Width { get; set; } 
+        public int Height { get; set; }
         public StringFormat StringFormat { get; set; } = new StringFormat
         {
             Alignment = StringAlignment.Center,
