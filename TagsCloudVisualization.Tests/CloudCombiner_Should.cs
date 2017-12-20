@@ -63,7 +63,7 @@ namespace TagsCloudVisualization.Tests
             statisticGenerator.Setup(x => x.GetStatistics(It.IsAny<IEnumerable<string>>()))
                 .Returns(statistic);
 
-            var cloud = GetCombiner().GetCloud();
+            var cloud = GetCombiner().GetCloud().GetValueOrThrow();
             AllWordsFormACircle(cloud);
         }
 
@@ -89,7 +89,7 @@ namespace TagsCloudVisualization.Tests
             statisticGenerator.Setup(x => x.GetStatistics(It.IsAny<IEnumerable<string>>()))
                 .Returns(statistic);
 
-            var cloud = GetCombiner().GetCloud();
+            var cloud = GetCombiner().GetCloud().GetValueOrThrow();
 
             cloud.Words.Count().Should().Be(wordsCount);
             cloud.Words.Min(x => x.FontSize).Should().Be(min);

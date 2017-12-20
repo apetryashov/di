@@ -29,13 +29,14 @@ namespace TagsCloudVisualization.Tests
                 new IgnoreSpecialWords(textReader.Object, config.Object)
             };
             foreach (var manipulator in manipulators)
-                tags = manipulator.Manipulate(tags);
+                tags = manipulator.Manipulate(tags).GetValueOrThrow();
             return tags;
         }
 
         [Test]
         public void Manipulate_ToLowerCaseCorrectWork()
         {
+            this.config.Setup(x => x.Paths).Returns(new string [] { });
             var input = new[] {"A", "b", "c", "D", "e", "F", "G", "H"};
             Manipulate(input).Should()
                 .BeEquivalentTo("a", "b", "c", "d", "e", "f", "g", "h");
